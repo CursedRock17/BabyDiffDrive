@@ -23,7 +23,7 @@ class Rover:
 
         # Create an "internal" clock - careful with multithreading
         self.currentTime = time.ticks_diff(time.ticks_ms(), 0)
-        self.lastTime = self.currenTime
+        self.lastTime = self.currentTime
 
         # Create defined characters for each wheel
         self.wheelPID            = [None] * self.roverWheels
@@ -35,6 +35,7 @@ class Rover:
         # Add a basic PID Controller to each wheel 
         for i in range (self.roverWheels):
             self.wheelPID[i] = PIDController()
+            self.wheelPID[i].clampOutput(-1 * self.PWM_MAX, self.PWM_MAX)
 
             # Define the specs of each wheel
             self.wheelDiameter[i] = wheelDiameterMM
@@ -135,7 +136,7 @@ class Rover:
         # Create Infinite loop between driving moth motors, until we've
         # Reach zero speed
         result = 1
-        while result > (self.zeroSpeed / 100):
+        while abs(result) > (self.zeroSpeed / 1000):
             for i in range(self.roverWheels):
                 wantedPulses = self.mmToPulses(distanceMM, i)
                 # Fix inverted motors
@@ -145,6 +146,7 @@ class Rover:
                 lastPulses = self.adjustedPulses[i]
                 result = self.setMotor(i, wantedPulses,
                                        powerPercent) / self.PWM_MAX
+                print(i, lastPulses, result)
         # Make Sure Motors No Longer Move "Zeroed"
         self.resetMotors()
 
@@ -204,10 +206,10 @@ class Rover:
     ################# Helper Functions ################
     ###################################################
     def refreshTime(self):
-        self.currentTime = time.ticks_diff(time.ticks_ms(), self.startTime)
-        deltaTime = float((self.currenTime - self.lastTime) / 1e6)  # Convert to S
+        self.currentTime = time.ticks_diff(time.ticks_ms(), 0)
+        deltaTime = float((self.currentTime - self.lastTime) / 1e6)  # Convert to S
         time.sleep(self.pidUpdateRate)
-        self.lastTime = self.currenTime
+        self.lastTime = self.currentTime
         return deltaTime
 
     def mmToPulses(self, mm, currentWheel):

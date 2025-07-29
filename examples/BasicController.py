@@ -1,4 +1,4 @@
-from Rover import RoverController
+from Rover import Rover
 
 # Motor/Wheel Info - [DataSheet](https://people.ece.ubc.ca/~eng-services/files/courses/elec391-data_sheets/MOT4-info.pdf)
 countersPerRev = 12  # Should be the same for all 130 RPM
@@ -12,7 +12,7 @@ motorRight = 0
 motorLeft = 1
 
 # Setting up the Controller
-controller = RoverController(wheelDiameterMM, pulsesPerRevolution)
+controller = Rover(wheelDiameterMM, pulsesPerRevolution)
 
 # Setup Right and Left Motor Respectively
 # It goes Wheel Number Designator (0 for right, 1 for left)
@@ -29,7 +29,7 @@ controller.setupPins(motorLeft, 21, 19, 12, 13)
 #  | 0   |  1  | Backward   |
 #  | 0   |  0  | STOP       |
 
-maxSpeed = 50  # Probably should leave here
+maxSpeed = 25  # Probably should leave here
 targetPos = pulsesPerRevolution * 1
 
 # Example Functions
@@ -50,8 +50,8 @@ def rotateLeft(angleInDegrees):
 
 # Have to tune the gains to your own motors
 # Mark a spot on the wheel and ensure it can make 1 full rotation
-controller.tuneGains(motorRight, 0.764, 0.028, 0.0)
-controller.tuneGains(motorLeft, 0.685, 0.028, 0.0)
+controller.tuneGains(motorRight, 0.850, 0.125, 0.0)
+controller.tuneGains(motorLeft, 0.850, 0.125, 0.0)
 controller.zeroSpeed = 15.3
 
 # Insert however you want it to move (i.e keyboard, sensor-based, etc)

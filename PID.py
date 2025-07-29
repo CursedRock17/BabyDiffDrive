@@ -47,7 +47,7 @@ class PIDController:
         error = targetValue - processValue
         # We can then pace the error to prevent overshoot
         self.errorSum += error * deltaTime
-        deltaInput = (processValue - self.lastinput) / deltaTime
+        deltaInput = (processValue - self.lastInput) / deltaTime
 
         # Create a PID Equation based on the OG equation:
         # u(t) = Kp * e(t) + Ki * integral(e(t) dt) + Kd * d (e(t)) / dt
